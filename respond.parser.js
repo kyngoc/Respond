@@ -8,9 +8,9 @@
         media = [],
         queries = [],
         inMediaQuery = false;
-        
+
     while (index < len) {
-      switch (str.charAt(index)) {
+      switch (str[index]) {
         // Start of a block.
         case '{':
           stack.push('{');
@@ -32,14 +32,14 @@
         
         // @media queries.
         case '@':
-          if (str.substring(index, index + 7) === '@media ') {
+          if (str.substring(index + 1, index + 6) === 'media') {
             var start = index;
             // Zip forward to the start of the media query.
-            while (++index < len && str.charAt(index) !== '{');
+            while (++index < len && str[index] !== '{');
             
             // Save the location of this media query.  If we hit the end of the file
             // just fucking, i don't know.
-            if (str.charAt(index) === '{') {
+            if (str[index] === '{') {
               media.push(start);
               index--;
             }
@@ -48,26 +48,28 @@
         
         // Doubley quoted strings.
         case '"':
-          while (++index < len && str.charAt(index) !== '"');
+          while (++index < len && str[index] !== '"');
           break;
         
         // Singley quoted strings.
         case "'":
-          while (++index < len && str.charAt(index) !== "'");
+          while (++index < len && str[index] !== "'");
           break;
         
         // Comments.
         case "/":
-          if (str.charAt(index + 1) == '*') {
+          if (str[index + 1] == '*') {
             index += 2;
             // Zip to the end of this comment block.
-            while (++index < len && str.charAt(index) !== '/' && str.charAt(index - 1) !== '*');
+            while (++index < len && str[index] !== '/' && str[index - 1] !== '*');
           }
           break;
       };
 
       index++;
     }
+    
+    // console.log(queries);
     
     return queries;
   };
